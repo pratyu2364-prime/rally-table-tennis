@@ -31,7 +31,8 @@ export function integrate(b,dt){
   }
   const level=TABLE.height+TABLE.radius;
   if(oldY>=level && b.y<=level && b.vy<0 && Math.abs(b.x)<=TABLE.halfWidth+TABLE.radius*.5 && Math.abs(b.z)<=TABLE.halfLength+TABLE.radius*.5){
-    b.y=level;b.vy=-b.vy*.88;b.vx*=.96;b.vz*=.97;
+    b.y=level;b.vy=-b.vy*.88;b.vx=b.vx*.96+b.curve*.045;
+    b.vz=b.vz*.97+Math.sign(b.vz)*b.spin*.09;b.spin*=.85;b.curve*=.93;
     const half=b.z>0?0:1;
     events.push({type:'bounce',x:b.x,z:b.z});
     if(b.serving && b.serveBounce===0){

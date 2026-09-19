@@ -1,5 +1,15 @@
 # Verification — 2026-09-19
 
+## Stroke-control revision
+
+- All 17 physics, stroke and audio unit tests pass. Forward/backward normal racket velocity changes return speed; opposite diagonal strokes create opposite curvature; spin changes speed and lateral kick at a table bounce; ordinary blocks/drives land legally; stationary input never follows ball height.
+- `tests/interaction.mjs` passes with actual browser input: 2D cursor and keyboard movement, stable idle racket height, a five-shot rally, forward-drive pace above 4 m/s, opposite sidespin from diagonal strokes, pause/resume and impact events. Deterministic rendering avoids wall-clock timeouts.
+- `tests/mobile.mjs` passes for real timed diagonal touch input: both lateral position and depth change, serving and pause/resume work, and no page errors occur.
+- Impact audio uses separate short table and rubber samples rather than swept sine beeps; amplitude follows collision strength. Tests verify bounded samples, short decay and distinct responses. Sounds are synthesized, not recordings of a specific racket/table.
+- Player trajectory targeting and ball-linked paddle height were removed. Contact-height tolerance and AI trajectory assistance remain intentional.
+
+## Initial release checks
+
 - `npm test`: 9 physics/rules tests pass, including both service directions, all spin/pace combinations, net collision, legal table bounces, misses, service rotation and win-by-two scoring.
 - `npm run build`: pinned Three.js bundle builds successfully, with no runtime CDN imports.
 - Forge local smoke gate passes: rendering, synthetic input, no uncaught exceptions or console errors.

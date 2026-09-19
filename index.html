@@ -5,7 +5,7 @@
   <meta name="theme-color" content="#192d29"><meta name="description" content="Find your flow. A beautifully crafted 3D table tennis club. Play a single-player match with spin, responsive paddles and three AI levels.">
   <title>Rally — Table Tennis Club</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' rx='14' fill='%23e97946'/%3E%3Ccircle cx='27' cy='25' r='16' fill='%23fff6e5'/%3E%3Cpath d='M37 37L48 49' stroke='%23fff6e5' stroke-width='8'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css?v=stroke-2">
 </head>
 <body>
   <div id="court" aria-label="3D table tennis court"></div>
@@ -30,18 +30,18 @@
       <div><span class="score-name">RALLY AI <i id="ai-serve"></i></span><strong id="ai-score">00</strong></div>
     </div>
     <div id="message" role="status" aria-live="polite"></div>
-    <div id="live-stats" hidden><div><span>RALLY</span><b id="rally-count">0</b></div><div><span>BALL SPEED</span><b><span id="speed">0</span><small> km/h</small></b></div><div><span>BEST RALLY</span><b id="best">0</b></div></div>
+    <div id="live-stats" hidden><div><span>RALLY</span><b id="rally-count">0</b></div><div><span>BALL SPEED</span><b><span id="speed">0</span><small> km/h</small></b></div><div><span>BEST</span><b id="best">0</b></div><div><span>YOUR STROKE</span><b id="shot-style">Ready</b></div></div>
     <div class="court-tag"><span class="tag-line"></span><div>COURT 01<small>THE EVENING SESSION</small></div></div>
     <section id="controls" hidden>
-      <div class="control-hint"><span class="tiny-label">MAKE YOUR MOVE</span><span id="move-hint">Move mouse to position · Hold to add pace</span></div>
-      <div class="spin-group" role="group" aria-label="Shot spin"><button data-spin="flat" class="active" aria-pressed="true"><kbd>1</kbd> Flat</button><button data-spin="top" aria-pressed="false"><kbd>2</kbd> Topspin</button><button data-spin="back" aria-pressed="false"><kbd>3</kbd> Backspin</button></div>
+      <div class="control-hint"><span class="tiny-label">MAKE YOUR STROKE</span><span id="move-hint">Push ↑ for pace · Pull ↓ to soften · Brush ↗ for spin</span></div>
+      <div class="spin-group" role="group" aria-label="Rubber angle bias"><button data-spin="flat" class="active" aria-pressed="true"><kbd>1</kbd> Natural</button><button data-spin="top" aria-pressed="false"><kbd>2</kbd> Topspin</button><button data-spin="back" aria-pressed="false"><kbd>3</kbd> Backspin</button></div>
       <button id="serve" class="serve-btn">Serve <span>SPACE ↗</span></button>
     </section>
-    <div id="touch-zone" hidden><span>SLIDE TO MOVE YOUR PADDLE</span></div>
+    <div id="touch-zone" hidden><span>SLIDE ACROSS + FORWARD / BACK</span></div>
   </main>
   <footer id="footer"><span>LESS SCROLL. MORE RALLY.</span><span><i></i> A GOOD PLACE TO PLAY</span><span>BUILT FOR THE LOVE OF THE GAME ↗</span></footer>
   <dialog id="modal"><button id="close-modal" class="modal-close" aria-label="Close dialog">×</button><div id="modal-content"></div></dialog>
   <div id="loading-error" hidden><h2>The court couldn’t open</h2><p>This game needs WebGL 2. Try a recent browser with hardware acceleration enabled.</p><button onclick="location.reload()">Try again</button></div>
-  <script type="module" src="./game.js"></script>
+  <script type="module" src="./game.js?v=stroke-2"></script>
 </body>
 </html>

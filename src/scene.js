@@ -97,11 +97,11 @@ export function createCourt(container){
     targetPos.copy(hero).lerp(play,blend);targetLook.set(small?0:-.65,.72,0).lerp(new THREE.Vector3(0,.64,-.12),blend);
     if(!playing){targetPos.x+=Math.sin(time*.12)*.09;}
     camera.position.copy(targetPos);look.copy(targetLook);shake*=Math.exp(-dt*20);camera.position.y+=Math.sin(time*90)*shake;camera.lookAt(look);
-    if(state){const b=state.ball;ball.position.set(b.x,b.y,b.z);player.position.set(state.px,state.py,1.53);opponent.position.set(state.ax,state.ay,-1.53);player.rotation.y=clamp(-state.pvx*.1,-.5,.5);player.rotation.z=-.15-state.px*.22;opponent.rotation.z=.15-state.ax*.2;player.rotation.x=state.spin==='top'?-.18:state.spin==='back'?.22:0;
+    if(state){const b=state.ball;ball.position.set(b.x,b.y,b.z);player.position.set(state.px,state.py,state.pz);opponent.position.set(state.ax,state.ay,-1.53);player.rotation.y=clamp(-state.pvx*.1,-.5,.5);player.rotation.z=-.15-state.px*.22;opponent.rotation.z=.15-state.ax*.2;player.rotation.x=(state.spin==='top'?-.18:state.spin==='back'?.22:0)+clamp(state.pvz*.12,-.25,.25);
       history.length=0;if(b.live)for(let i=0;i<10;i++)history.push(new THREE.Vector3(b.x-b.vx*i*.004,b.y-b.vy*i*.004,b.z-b.vz*i*.004));
     }else{ball.position.set(Math.sin(time*.7)*.24,1.05+Math.abs(Math.sin(time*1.7))*.32,.55);player.rotation.y=Math.sin(time*.5)*.1;}
     opponent.rotation.x=0;
-    [player,opponent].forEach((p,i)=>{swings[i]=Math.max(0,swings[i]-dt);const stroke=Math.sin(swings[i]/.2*Math.PI);p.position.z+=(i===0?-1:1)*stroke*.1;if(state)p.rotation.x+=(i===0?-1:1)*stroke*.35;});
+    [player,opponent].forEach((p,i)=>{swings[i]=Math.max(0,swings[i]-dt);const stroke=Math.sin(swings[i]/.2*Math.PI);if(i===1)p.position.z+=stroke*.08;if(state)p.rotation.x+=(i===0?-1:1)*stroke*.18;});
     trail.forEach((m,i)=>{if(history[i+1]){m.position.copy(history[i+1]);m.material.opacity=(1-i/9)*.19;m.scale.setScalar(1-i*.06);}else m.material.opacity=0;});
     const onTable=Math.abs(ball.position.x)<.77&&Math.abs(ball.position.z)<1.38;shadow.position.set(ball.position.x,onTable?.763:.003,ball.position.z);shadow.material.opacity=clamp(1-(ball.position.y-(onTable?.76:0))*.6,.12,.8);shadow.scale.setScalar(1+Math.max(0,ball.position.y-.76)*1.2);
     rings.forEach(r=>{r.userData.life=Math.max(0,r.userData.life-dt);r.material.opacity=r.userData.life*1.6;r.scale.setScalar(1+(1-r.userData.life/.35)*3);});

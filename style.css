@@ -13,3 +13,4 @@ dialog{background:#eaeada;color:#183c2b;border:0;border-radius:12px;width:min(44
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 @media(min-width:701px){h1{width:490px}.intro{width:365px}.scoreboard{left:auto;right:4.5%;transform:none}}
 @media(max-width:700px){h1{font-size:62px}h1 br{display:block}.intro p br::after{content:' '}.intro p{max-width:300px}#live-stats{background:#10251fb3;border-radius:5px;padding:9px 12px}}
+#live-stats #shot-style{font-size:13px;line-height:1.5;max-width:110px;padding-top:5px}@media(max-width:700px){#live-stats{gap:17px}#live-stats #shot-style{font-size:11px;max-width:95px}}

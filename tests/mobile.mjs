@@ -13,12 +13,13 @@ try{
   const before=(await page.evaluate(()=>window.__rally)).px;
   const cdp=await page.context().newCDPSession(page);
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:150,y:680}]});await page.waitForTimeout(150);
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:195,y:680}]});await page.waitForTimeout(150);
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:240,y:680}]});await page.waitForTimeout(150);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:195,y:650}]});await page.waitForTimeout(150);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:240,y:620}]});await page.waitForTimeout(150);
   await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
   await page.waitForTimeout(800);
   console.log(JSON.stringify(await page.evaluate(()=>({trace:window.touchTrace,state:window.__rally})),null,0));
   assert.ok((await page.evaluate(()=>window.__rally)).px>before+.3,'touch drag moves paddle');
+  assert.ok((await page.evaluate(()=>window.__rally)).pz<1.46,'vertical touch movement changes racket depth');
   await page.tap('#serve');await page.waitForTimeout(2000);await page.screenshot({path:'/tmp/rally-mobile-playing.png'});
   assert.ok(['playing','between','ready'].includes((await page.evaluate(()=>window.__rally)).mode));
   await page.tap('#pause');assert.equal((await page.evaluate(()=>window.__rally)).mode,'paused');await page.tap('#resume');
