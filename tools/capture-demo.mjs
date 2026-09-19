@@ -1,5 +1,5 @@
 import {chromium} from 'playwright';
-import {mkdirSync,writeFileSync} from 'node:fs';
+import {mkdirSync,writeFileSync,existsSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import assert from 'node:assert/strict';
@@ -11,26 +11,38 @@ const url=process.env.RALLY_URL||'http://localhost:8087';
 const ffmpeg=process.env.FFMPEG||'ffmpeg';
 const width=1920,height=1080,fps=30,seconds=15,count=fps*seconds;
 mkdirSync(folder,{recursive:true});mkdirSync(framesDir,{recursive:true});
-const browser=await chromium.launch({args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 let events=[],maxRally=0;const errors=[];
-try{
+let resume=0;while(resume<count&&existsSync(join(framesDir,`frame-${String(resume).padStart(4,'0')}.jpg`)))resume++;
+// Short browser sessions avoid a long-lived software-renderer capture crash.
+// Replaying the same seeded input restores exact simulation state; old frames
+// are not re-recorded, and rasterization is skipped during the replay only.
+for(let start=Math.min(resume,count-1);start<count;start+=90){
+ const browser=await chromium.launch({args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-gpu-watchdog']});
+ try{
   const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1});
   page.on('pageerror',e=>errors.push(e.message));
   await installFrameDriver(page);await page.goto(url);await advance(page);
   await page.evaluate(()=>{document.getElementById('difficulty').value='casual';});
-  // Render the exact game at fixed simulation times, never duplicate slow frames.
-  for(let i=0;i<count;i++){
+  const end=Math.min(count,start+90);
+  for(let i=0;i<end;i++){
+    if(i===0)await page.evaluate(skip=>window.__skipCaptureDraw=skip,start>0);
+    if(i===start)await page.evaluate(()=>window.__skipCaptureDraw=false);
     if(i===30)await page.keyboard.press('Space');
     if(i>=55){const s=await followBall(page,width,height,true);maxRally=Math.max(maxRally,s.rally);}
     await advance(page);
-    await page.screenshot({path:join(framesDir,`frame-${String(i).padStart(4,'0')}.jpg`),type:'jpeg',quality:95});
-    if(i===20)await page.screenshot({path:join(folder,'club.png')});
-    if(i===240)await page.screenshot({path:join(folder,'screenshot.png')});
-    if(i%60===0)console.log(`Captured ${i}/${count} frames; rally ${maxRally}`);
+    if(i>=start){
+      await page.screenshot({path:join(framesDir,`frame-${String(i).padStart(4,'0')}.jpg`),type:'jpeg',quality:95});
+      if(i===20)await page.screenshot({path:join(folder,'club.png')});
+      if(i===240)await page.screenshot({path:join(folder,'screenshot.png')});
+      if(i%30===0)console.log(`Captured ${i}/${count} frames; rally ${maxRally}`);
+    }
   }
   events=await page.evaluate(()=>window.__impacts);
-  assert.ok(maxRally>=4,'demo must show a real rally');assert.deepEqual(errors,[]);
-}finally{await browser.close();}
+  assert.deepEqual(errors,[]);
+ }finally{await browser.close();}
+ console.log(`Capture batch complete: ${Math.min(count,start+90)}/${count}`);
+}
+assert.ok(maxRally>=4,'demo must show a real rally');
 // Mix the same impact synthesis at the captured simulation timestamps.
 const rate=48000,pcm=new Float32Array(rate*seconds);
 for(const event of events){

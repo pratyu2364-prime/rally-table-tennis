@@ -7,6 +7,9 @@
 - `tests/mobile.mjs` passes for real timed diagonal touch input: both lateral position and depth change, serving and pause/resume work, and no page errors occur.
 - Impact audio uses separate short table and rubber samples rather than swept sine beeps; amplitude follows collision strength. Tests verify bounded samples, short decay and distinct responses. Sounds are synthesized, not recordings of a specific racket/table.
 - Player trajectory targeting and ball-linked paddle height were removed. Contact-height tolerance and AI trajectory assistance remain intentional.
+- The live bundle matches the local tested build (SHA-256 `85c5683f6f709127a6a8a60bab91a1350d1dbfd4c01082e1dcb8c05b440d9762`). Local and live forge smoke gates pass.
+- `demo.mp4` was captured from the live game: 15 seconds, 1920 × 1080, 30 fps, 450 H.264 frames and AAC audio, 3,637,355 bytes. Full-file decoding passes. The capture contains a four-shot rally, 13 table bounces, 7 racket impacts and 3 point events, with no page errors.
+- A long-lived 1080p capture browser closed at frame 133. The capture tool now resumes deterministic input in short sessions and skips rasterization only while replaying earlier frames. The complete output was inspected after encoding; game code is unchanged by capture instrumentation.
 
 ## Initial release checks
 

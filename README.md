@@ -26,6 +26,8 @@ Browser verification: with Playwright and Chromium available, start the HTTP ser
 
 Demo capture: `FFMPEG=/path/to/ffmpeg node tools/capture-demo.mjs /path/to/output /path/to/frames`. Requires Playwright. Creates a 15-second native 1920 × 1080, 30 fps H.264 MP4 with synchronized game impact audio. The unchanged game runs with scripted normal input at fixed simulation times; this avoids dropped frames on a slow renderer and is not a real-time performance benchmark. The same audio synthesis is used in-game and in the recording.
 
+Capture resumes existing frames in short browser sessions, replaying the same seeded inputs with rasterization skipped until the resume point. Use a fresh frame directory for each game revision so captures never mix different builds.
+
 Three.js rendering reference: https://threejs.org/docs/pages/WebGLRenderer.html
 
 Capture references: https://playwright.dev/docs/api/class-page#page-screenshot and https://ffmpeg.org/ffmpeg.html

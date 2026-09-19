@@ -2,6 +2,17 @@
 // callback once per frame, with its normal 240 Hz physics and real input events.
 export async function installFrameDriver(page){
   await page.addInitScript(()=>{
+    const getContext=HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext=function(...args){
+      const context=getContext.apply(this,args);
+      if(context&&args[0].includes('webgl')&&!context.__captureWrapped){
+        context.__captureWrapped=true;
+        for(const method of ['drawElements','drawArrays','drawElementsInstanced','drawArraysInstanced'])if(context[method]){
+          const draw=context[method].bind(context);context[method]=(...a)=>{if(!window.__skipCaptureDraw)draw(...a);};
+        }
+      }
+      return context;
+    };
     let now=0,id=0;const callbacks=new Map();
     Object.defineProperty(performance,'now',{value:()=>now});
     window.requestAnimationFrame=cb=>{callbacks.set(++id,cb);return id;};
